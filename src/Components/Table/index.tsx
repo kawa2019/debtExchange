@@ -1,9 +1,19 @@
-import { FC, useEffect, useState } from 'react';
-import { DebtApi } from '../../Services/Api/interfaces';
-import { getTopDebts } from '../../Services/Api';
+import { FC, useEffect, useMemo, useState } from 'react';
+import { DebtApi, DebtApiKey } from '../../Services/Api/interfaces';
+import { getFilteredDebts, getTopDebts } from '../../Services/Api';
+import TableHead from './TableHead';
+import TableBody from './TableBody';
+import './index.sass';
 
-const Table: FC = () => {
+interface TableProps {
+  search: string;
+}
+
+const Table: FC<TableProps> = ({ search }) => {
   const [topDebts, setTopDebts] = useState<DebtApi[]>([]);
+  const [filteredDebts, setFilteredDebts] = useState<DebtApi[] | null>(null);
+  const [sortSettings, setSortSettings] = useState({ column: 'Name', direction: 'up' });
+
   useEffect(() => {
     (async () => {
       const result = await getTopDebts();
@@ -11,28 +21,47 @@ const Table: FC = () => {
     })();
   }, []);
 
-  return (
-    <table>
-      <thead>
-        <tr>
-          <th>Dłużnik</th>
-          <th>NIP</th>
-          <th>Kwota zadłużenia</th>
-          <th>Data powstania zobowiązania</th>
-        </tr>
-      </thead>
+  useEffect(() => {
+    (async () => {
+      if (search) {
+        const body = { data: search };
+        const result = await getFilteredDebts(body);
+        setFilteredDebts(result);
+      }
+    })();
+  }, [search]);
 
-      <tbody>
-        {topDebts.map((debt: DebtApi) => (
-          <tr>
-            <td>{debt.Name}</td>
-            <td>{debt.NIP}</td>
-            <td>{debt.Value}</td>
-            <td>{debt.Date}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+  const showedDebts = useMemo(() => {
+    return search.length > 3 && filteredDebts ? filteredDebts : topDebts;
+  }, [search, filteredDebts, topDebts]);
+
+  const getSortedDebts = (debts: DebtApi[], sortField: DebtApiKey, sortOrder: string) => {
+    return [...debts].sort((a, b) => {
+      return (
+        a[sortField].toString().localeCompare(b[sortField].toString(), 'pl', {
+          numeric: true,
+        }) * (sortOrder === 'asc' ? 1 : -1)
+      );
+    });
+  };
+
+  const handleSorting = (sortField: DebtApiKey, sortOrder: string) => {
+    const sortedTopDebts = getSortedDebts(topDebts, sortField, sortOrder);
+    setTopDebts(sortedTopDebts);
+
+    if (filteredDebts) {
+      const sortedFilteredDebts = getSortedDebts(filteredDebts, sortField, sortOrder);
+      setFilteredDebts(sortedFilteredDebts);
+    }
+  };
+
+  return (
+    <div className={'Container'}>
+      <table>
+        <TableHead handleSorting={handleSorting} />
+        <TableBody tableData={showedDebts} />
+      </table>
+    </div>
   );
 };
 

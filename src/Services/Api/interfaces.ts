@@ -10,6 +10,8 @@ export interface DebtApi {
   Address: string;
 }
 
+export type DebtApiKey = keyof DebtApi;
+
 export interface FilteredDebtsBody {
   data: string;
 }
