@@ -21,13 +21,11 @@ const SearchBar: FC<SearchBarProps> = ({ handleSearch }) => {
     [handleSearch, localSearch],
   );
 
-  //TOOD adding normalnize css
-
   return (
     <header className={'SearchBar'}>
       <form onSubmit={handleSubmit} className={'SearchBar-Form Container'}>
         <label className={'SearchBar-Label'}>Podaj nip lub nazwę dłużnika</label>
-        <div>
+        <div className={'SearchBar-ContainerBar'}>
           <input
             value={localSearch}
             onChange={handleLocalSearch}

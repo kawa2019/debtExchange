@@ -1,5 +1,7 @@
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { DebtApiKey } from '../../../Services/Api/interfaces';
+import { TiArrowSortedDown, TiArrowSortedUp } from 'react-icons/ti';
+import './index.sass';
 
 interface TableHeadProps {
   handleSorting: (sortField: DebtApiKey, sortOrder: string) => void;
@@ -16,20 +18,46 @@ const TableHead: FC<TableHeadProps> = ({ handleSorting }) => {
     handleSorting(accessor, sortOrder);
   };
 
+  const orderIcon = useMemo(() => {
+    return order === 'asc' ? (
+      <TiArrowSortedDown className={'TableHead-OrderIcon'} size={16} />
+    ) : (
+      <TiArrowSortedUp className={'TableHead-OrderIcon'} size={16} />
+    );
+  }, [order]);
+
   return (
-    <thead>
+    <thead className={'TableHead'}>
       <tr>
-        <th>
-          <div onClick={() => handleSortingChange('Name')}>Dłużnik</div>
+        <th
+          className={'TableHead-Th TableHead-Th--name'}
+          onClick={() => handleSortingChange('Name')}>
+          <div className={'TableHead-ColumnWrapper'}>
+            Dłużnik
+            {sortField === 'Name' && orderIcon}
+          </div>
         </th>
-        <th>
-          <div onClick={() => handleSortingChange('NIP')}>NIP</div>
+        <th className={'TableHead-Th TableHead-Th--nip'} onClick={() => handleSortingChange('NIP')}>
+          <div className={'TableHead-ColumnWrapper'}>
+            NIP
+            {sortField === 'NIP' && orderIcon}
+          </div>
         </th>
-        <th>
-          <div onClick={() => handleSortingChange('Value')}>Kwota zadłużenia</div>
+        <th
+          className={'TableHead-Th TableHead-Th--value'}
+          onClick={() => handleSortingChange('Value')}>
+          <div className={'TableHead-ColumnWrapper'}>
+            Kwota zadłużenia
+            {sortField === 'Value' && orderIcon}
+          </div>
         </th>
-        <th>
-          <div onClick={() => handleSortingChange('Date')}>Data powstania zobowiązania</div>
+        <th
+          className={'TableHead-Th TableHead-Th--date'}
+          onClick={() => handleSortingChange('Date')}>
+          <div className={'TableHead-ColumnWrapper'}>
+            Data powstania zobowiązania
+            {sortField === 'Date' && orderIcon}
+          </div>
         </th>
       </tr>
     </thead>

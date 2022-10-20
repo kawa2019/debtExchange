@@ -4,32 +4,38 @@ import { getFilteredDebts, getTopDebts } from '../../Services/Api';
 import TableHead from './TableHead';
 import TableBody from './TableBody';
 import './index.sass';
+import Loader from '../Loader';
 
 interface TableProps {
   search: string;
+  isLoading: boolean;
+  handleIsLoading: (value: boolean) => void;
 }
 
-const Table: FC<TableProps> = ({ search }) => {
+const Table: FC<TableProps> = ({ search, isLoading, handleIsLoading }) => {
   const [topDebts, setTopDebts] = useState<DebtApi[]>([]);
   const [filteredDebts, setFilteredDebts] = useState<DebtApi[] | null>(null);
-  const [sortSettings, setSortSettings] = useState({ column: 'Name', direction: 'up' });
 
   useEffect(() => {
     (async () => {
+      handleIsLoading(true);
       const result = await getTopDebts();
       setTopDebts(result);
+      handleIsLoading(false);
     })();
-  }, []);
+  }, [handleIsLoading]);
 
   useEffect(() => {
-    (async () => {
-      if (search) {
+    if (search) {
+      (async () => {
+        handleIsLoading(true);
         const body = { data: search };
         const result = await getFilteredDebts(body);
         setFilteredDebts(result);
-      }
-    })();
-  }, [search]);
+        handleIsLoading(false);
+      })();
+    }
+  }, [search, handleIsLoading]);
 
   const showedDebts = useMemo(() => {
     return search.length > 3 && filteredDebts ? filteredDebts : topDebts;
@@ -55,11 +61,17 @@ const Table: FC<TableProps> = ({ search }) => {
     }
   };
 
+  //notes
+  //todo dodać rwd
+  //todo sprawdzenie czy dziala na innych przegladarkach
+  //todo dodac testy
+  //todo textalig h header do usunieacia
+  //
   return (
     <div className={'Container'}>
-      <table>
+      <table className={'Table'}>
         <TableHead handleSorting={handleSorting} />
-        <TableBody tableData={showedDebts} />
+        <TableBody tableData={showedDebts} isLoading={isLoading} />
       </table>
     </div>
   );
