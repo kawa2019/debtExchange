@@ -3,10 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="2aaeed78-7d04-4d8e-ab16-580d35818108" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Table/TableBody/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Table/TableBody/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Components/Table/TableHead/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Table/TableHead/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Components/Table/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Table/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/Table/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/Table/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/Table/interfaces.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/Table/interfaces.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +44,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1666472503303</updated>
-      <workItem from="1666472508267" duration="2112000" />
+      <workItem from="1666472508267" duration="4196000" />
     </task>
     <servers />
   </component>

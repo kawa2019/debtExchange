@@ -16,15 +16,14 @@ interface TableProps {
 const Table: FC<TableProps> = ({search, isLoading, handleIsLoading}) => {
     const [topDebts, setTopDebts] = useState<DebtApi[]>([]);
     const [filteredDebts, setFilteredDebts] = useState<DebtApi[] | null>(null);
-
-    useEffect(() => {
-    }, [])
+    const [sortField, setSortField] = useState<DebtApiKey>(defaultSortField);
+    const [order, setOrder] = useState<Order>(defaultOrder);
 
     useEffect(() => {
         (async () => {
             handleIsLoading(true);
             const result = await getTopDebts();
-            const sortedResult = getSortedDebts(result, defaultSortField, defaultOrder);
+            const sortedResult = getSortedDebts(result, sortField, order);
             setTopDebts(sortedResult);
             handleIsLoading(false);
         })();
@@ -36,7 +35,8 @@ const Table: FC<TableProps> = ({search, isLoading, handleIsLoading}) => {
                 handleIsLoading(true);
                 const body = {data: search};
                 const result = await getFilteredDebts(body);
-                setFilteredDebts(result);
+                const sortedResult = getSortedDebts(result, sortField, order);
+                setFilteredDebts(sortedResult);
                 handleIsLoading(false);
             })();
         }
@@ -54,12 +54,19 @@ const Table: FC<TableProps> = ({search, isLoading, handleIsLoading}) => {
             const sortedFilteredDebts = getSortedDebts(filteredDebts, sortField, sortOrder);
             setFilteredDebts(sortedFilteredDebts);
         }
-    }, []);
+    }, [topDebts, filteredDebts]);
+
+    const handleSortingChange = useCallback((accessor: DebtApiKey) => {
+        const sortOrder = order === 'asc' ? 'desc' : 'asc';
+        setSortField(accessor);
+        setOrder(sortOrder);
+        handleSorting(accessor, sortOrder);
+    }, [order, sortField, handleSorting]);
 
     return (
         <div className={'Container TableContainer'}>
             <table className={'Table'}>
-                <TableHead handleSorting={handleSorting}/>
+                <TableHead handleSortingChange={handleSortingChange} sortField={sortField} order={order}/>
                 <TableBody tableData={showedDebts} isLoading={isLoading}/>
             </table>
         </div>

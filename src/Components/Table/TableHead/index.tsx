@@ -1,4 +1,4 @@
-import {FC, useEffect, useState} from 'react';
+import {FC, useCallback, useEffect, useState} from 'react';
 import {DebtApiKey} from '../../../Services/Api/interfaces';
 import './index.sass';
 import OrderIcon from '../../OrderIcon';
@@ -6,19 +6,12 @@ import {Order} from '../../../Services/Table/interfaces';
 import {defaultOrder, defaultSortField} from "../../../Services/Table";
 
 interface TableHeadProps {
-    handleSorting: (sortField: DebtApiKey, sortOrder: Order) => void;
+    handleSortingChange: (sortField: DebtApiKey) => void;
+    sortField: DebtApiKey;
+    order: Order
 }
 
-const TableHead: FC<TableHeadProps> = ({handleSorting}) => {
-    const [sortField, setSortField] = useState<DebtApiKey>(defaultSortField);
-    const [order, setOrder] = useState<Order>(defaultOrder);
-
-    const handleSortingChange = (accessor: DebtApiKey) => {
-        const sortOrder = accessor === sortField && order === 'asc' ? 'desc' : 'asc';
-        setSortField(accessor);
-        setOrder(sortOrder);
-        handleSorting(accessor, sortOrder);
-    };
+const TableHead: FC<TableHeadProps> = ({handleSortingChange, sortField, order}) => {
 
     return (
         <thead className={'TableHead'}>
