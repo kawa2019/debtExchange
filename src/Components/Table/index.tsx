@@ -1,65 +1,69 @@
-import { FC, useEffect, useMemo, useState } from 'react';
-import { DebtApi, DebtApiKey } from '../../Services/Api/interfaces';
-import { getFilteredDebts, getTopDebts } from '../../Services/Api';
+import {FC, useCallback, useEffect, useMemo, useState} from 'react';
+import {DebtApi, DebtApiKey} from '../../Services/Api/interfaces';
+import {getFilteredDebts, getTopDebts} from '../../Services/Api';
 import TableHead from './TableHead';
 import TableBody from './TableBody';
 import './index.sass';
-import { getSortedDebts } from '../../Services/Table';
-import { Order } from '../../Services/Table/interfaces';
+import {defaultOrder, defaultSortField, getSortedDebts} from '../../Services/Table';
+import {Order} from '../../Services/Table/interfaces';
 
 interface TableProps {
-  search: string;
-  isLoading: boolean;
-  handleIsLoading: (value: boolean) => void;
+    search: string;
+    isLoading: boolean;
+    handleIsLoading: (value: boolean) => void;
 }
 
-const Table: FC<TableProps> = ({ search, isLoading, handleIsLoading }) => {
-  const [topDebts, setTopDebts] = useState<DebtApi[]>([]);
-  const [filteredDebts, setFilteredDebts] = useState<DebtApi[] | null>(null);
+const Table: FC<TableProps> = ({search, isLoading, handleIsLoading}) => {
+    const [topDebts, setTopDebts] = useState<DebtApi[]>([]);
+    const [filteredDebts, setFilteredDebts] = useState<DebtApi[] | null>(null);
 
-  useEffect(() => {
-    (async () => {
-      handleIsLoading(true);
-      const result = await getTopDebts();
-      setTopDebts(result);
-      handleIsLoading(false);
-    })();
-  }, [handleIsLoading]);
+    useEffect(() => {
+    }, [])
 
-  useEffect(() => {
-    if (search) {
-      (async () => {
-        handleIsLoading(true);
-        const body = { data: search };
-        const result = await getFilteredDebts(body);
-        setFilteredDebts(result);
-        handleIsLoading(false);
-      })();
-    }
-  }, [search, handleIsLoading]);
+    useEffect(() => {
+        (async () => {
+            handleIsLoading(true);
+            const result = await getTopDebts();
+            const sortedResult = getSortedDebts(result, defaultSortField, defaultOrder);
+            setTopDebts(sortedResult);
+            handleIsLoading(false);
+        })();
+    }, []);
 
-  const showedDebts = useMemo(() => {
-    return search.length > 3 && filteredDebts ? filteredDebts : topDebts;
-  }, [search, filteredDebts, topDebts]);
+    useEffect(() => {
+        if (search) {
+            (async () => {
+                handleIsLoading(true);
+                const body = {data: search};
+                const result = await getFilteredDebts(body);
+                setFilteredDebts(result);
+                handleIsLoading(false);
+            })();
+        }
+    }, [search]);
 
-  const handleSorting = (sortField: DebtApiKey, sortOrder: Order) => {
-    const sortedTopDebts = getSortedDebts(topDebts, sortField, sortOrder);
-    setTopDebts(sortedTopDebts);
+    const showedDebts = useMemo(() => {
+        return search.length > 3 && filteredDebts ? filteredDebts : topDebts;
+    }, [search, filteredDebts, topDebts]);
 
-    if (filteredDebts) {
-      const sortedFilteredDebts = getSortedDebts(filteredDebts, sortField, sortOrder);
-      setFilteredDebts(sortedFilteredDebts);
-    }
-  };
+    const handleSorting = useCallback((sortField: DebtApiKey, sortOrder: Order) => {
+        const sortedTopDebts = getSortedDebts(topDebts, sortField, sortOrder);
+        setTopDebts(sortedTopDebts);
 
-  return (
-    <div className={'Container TableContainer'}>
-      <table className={'Table'}>
-        <TableHead handleSorting={handleSorting} />
-        <TableBody tableData={showedDebts} isLoading={isLoading} />
-      </table>
-    </div>
-  );
+        if (filteredDebts) {
+            const sortedFilteredDebts = getSortedDebts(filteredDebts, sortField, sortOrder);
+            setFilteredDebts(sortedFilteredDebts);
+        }
+    }, []);
+
+    return (
+        <div className={'Container TableContainer'}>
+            <table className={'Table'}>
+                <TableHead handleSorting={handleSorting}/>
+                <TableBody tableData={showedDebts} isLoading={isLoading}/>
+            </table>
+        </div>
+    );
 };
 
 export default Table;

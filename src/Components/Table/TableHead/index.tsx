@@ -3,18 +3,15 @@ import {DebtApiKey} from '../../../Services/Api/interfaces';
 import './index.sass';
 import OrderIcon from '../../OrderIcon';
 import {Order} from '../../../Services/Table/interfaces';
+import {defaultOrder, defaultSortField} from "../../../Services/Table";
 
 interface TableHeadProps {
     handleSorting: (sortField: DebtApiKey, sortOrder: Order) => void;
 }
 
 const TableHead: FC<TableHeadProps> = ({handleSorting}) => {
-    const [sortField, setSortField] = useState<DebtApiKey>('Name');
-    const [order, setOrder] = useState<Order>('asc');
-
-    useEffect(() => {
-        handleSorting(sortField, order);
-    }, [])
+    const [sortField, setSortField] = useState<DebtApiKey>(defaultSortField);
+    const [order, setOrder] = useState<Order>(defaultOrder);
 
     const handleSortingChange = (accessor: DebtApiKey) => {
         const sortOrder = accessor === sortField && order === 'asc' ? 'desc' : 'asc';
