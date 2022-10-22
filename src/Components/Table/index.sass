@@ -1,5 +1,13 @@
+@import "src/Sass/variables"
+
+.TableContainer
+  overflow: auto
+  @media (max-width: $breakpointSm)
+    max-height: 500px
+
 .Table
   border-collapse: collapse
   display: table
   width: 100%
   border-spacing: 0
+  position: relative

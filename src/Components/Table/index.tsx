@@ -4,7 +4,8 @@ import { getFilteredDebts, getTopDebts } from '../../Services/Api';
 import TableHead from './TableHead';
 import TableBody from './TableBody';
 import './index.sass';
-import Loader from '../Loader';
+import { getSortedDebts } from '../../Services/Table';
+import { Order } from '../../Services/Table/interfaces';
 
 interface TableProps {
   search: string;
@@ -41,17 +42,7 @@ const Table: FC<TableProps> = ({ search, isLoading, handleIsLoading }) => {
     return search.length > 3 && filteredDebts ? filteredDebts : topDebts;
   }, [search, filteredDebts, topDebts]);
 
-  const getSortedDebts = (debts: DebtApi[], sortField: DebtApiKey, sortOrder: string) => {
-    return [...debts].sort((a, b) => {
-      return (
-        a[sortField].toString().localeCompare(b[sortField].toString(), 'pl', {
-          numeric: true,
-        }) * (sortOrder === 'asc' ? 1 : -1)
-      );
-    });
-  };
-
-  const handleSorting = (sortField: DebtApiKey, sortOrder: string) => {
+  const handleSorting = (sortField: DebtApiKey, sortOrder: Order) => {
     const sortedTopDebts = getSortedDebts(topDebts, sortField, sortOrder);
     setTopDebts(sortedTopDebts);
 
@@ -61,14 +52,8 @@ const Table: FC<TableProps> = ({ search, isLoading, handleIsLoading }) => {
     }
   };
 
-  //notes
-  //todo dodać rwd
-  //todo sprawdzenie czy dziala na innych przegladarkach
-  //todo dodac testy
-  //todo textalig h header do usunieacia
-  //
   return (
-    <div className={'Container'}>
+    <div className={'Container TableContainer'}>
       <table className={'Table'}>
         <TableHead handleSorting={handleSorting} />
         <TableBody tableData={showedDebts} isLoading={isLoading} />

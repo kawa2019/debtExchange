@@ -1,30 +1,56 @@
+@import "src/Sass/variables"
+
 .TableHead-Th
   padding: 20px 0 17px 20px
-  border-bottom: 1px solid #D3D3D3
+  border-bottom: 1px solid $gray-color
   color: #D3D3D3
   text-align: left
   cursor: pointer
   text-transform: uppercase
   font-size: 12px
   font-family: sans-serif
+  position: sticky
+  top: 0
+  background-color: #fff
+
+  &:hover
+    color: #000
 
   &--name
-    padding-right: 200px
-
-  &--nip
-    padding-right: 140px
-
-  &--value
     padding-right: 165px
 
+  &--nip
+    padding-right: 105px
+
+  &--value
+    padding-right: 130px
+
   &--date
-    padding-right: 50px
+    padding-right: 35px
+    @media (max-width: 768px)
+      padding-right: 5px
+
+  @media (max-width: $breakpointMd)
+    padding-right: 10px
+    padding-left: 10px
+  @media (max-width: $breakpointSm)
+    padding-right: 0
+    padding-left: 5px
+    font-size: 11px
+    &--date
+      padding-right: 5px
 
 .TableHead-ColumnWrapper
-  display: inline-flex
-  position: relative
+  display: flex
   align-items: center
+  gap: 5px
+  @media (max-width: $breakpointMd)
+    gap: 0
+    justify-content: space-between
 
-  .TableHead-OrderIcon
-    position: absolute
-    right: -21px
+.TableHead-OrderIcon
+  visibility: hidden
+  overflow: visible
+
+.TableHead-OrderIcon--active
+  visibility: inherit

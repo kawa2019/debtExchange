@@ -1,3 +1,5 @@
+@import 'src/Sass/variables'
+
 *
   margin: 0
   padding: 0
@@ -6,3 +8,10 @@
 .Container
   width: 1200px
   margin: 0 auto
+  @media (max-width: $breakpointMd)
+    width: 760px
+  @media (max-width: $breakpointSm)
+    width: 350px
+
+.Separator
+  flex: 1

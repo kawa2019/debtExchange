@@ -14,8 +14,6 @@ const Home: FC = () => {
     setIsLoading(value);
   }, []);
 
-  //TODO remove all files
-
   return (
     <div>
       <SearchBar handleSearch={handleSearch} />

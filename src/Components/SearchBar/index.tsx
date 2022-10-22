@@ -1,5 +1,7 @@
 import { ChangeEvent, FC, SyntheticEvent, useCallback, useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import './index.sass';
+import { FaSearch } from 'react-icons/fa';
 
 interface SearchBarProps {
   handleSearch: (value: string) => void;
@@ -7,6 +9,9 @@ interface SearchBarProps {
 
 const SearchBar: FC<SearchBarProps> = ({ handleSearch }) => {
   const [localSearch, setLocalSearch] = useState<string>('');
+  const isMobileView = useMediaQuery({
+    query: '(max-width: 768px)',
+  });
 
   const handleLocalSearch = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const newSearch = e.target.value;
@@ -35,7 +40,7 @@ const SearchBar: FC<SearchBarProps> = ({ handleSearch }) => {
             className={'SearchBar-Input'}
           />
           <button type={'submit'} className={'SearchBar-Submit'}>
-            Szukaj
+            {isMobileView ? <FaSearch size={24} /> : 'Szukaj'}
           </button>
         </div>
       </form>
